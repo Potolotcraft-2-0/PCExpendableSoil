@@ -4,3 +4,9 @@ main: expendablesoil.expendablesoil.ExpendableSoil
 api-version: 1.20
 authors: [ j1sk1ss ]
 description: Expendable soil simulation
+
+commands:
+  expendable_info:
+    usage: /expendable_info
+  kill_chunk:
+    usage: /kill_chunk
