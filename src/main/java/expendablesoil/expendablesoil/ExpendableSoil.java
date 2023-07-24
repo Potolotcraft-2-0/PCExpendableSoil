@@ -8,6 +8,8 @@ import expendablesoil.expendablesoil.listeners.WorldListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -18,6 +20,13 @@ public final class ExpendableSoil extends JavaPlugin {
     public void onEnable() {
         ChunksData = new ChunksData();
 
+        try {
+            if (new File("expendable_chunks_data.json").exists())
+                ChunksData = expendablesoil.expendablesoil.data.ChunksData.loadChunksData("expendable_chunks_data");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         for (var listener : Arrays.asList(new ChunkListener(), new WorldListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
@@ -27,6 +36,10 @@ public final class ExpendableSoil extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // TODO: Implement saving and loading data
+        try {
+            ChunksData.saveChunksData("expendable_chunks_data");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

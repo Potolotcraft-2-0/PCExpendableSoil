@@ -15,21 +15,22 @@ public class WorldListener implements Listener {
     @EventHandler
     public void newDay(NewDayEvent event) {
         for (var location : ExpendableSoil.ChunksData.ChunkData.keySet()) {
+            var chunk = Bukkit.getWorlds().get(0).getChunkAt(location);
+            if (!chunk.isLoaded()) continue;
+
             var healthPoints = ExpendableSoil.ChunksData.ChunkData.get(location);
             if (healthPoints <= 0) {
                 ExpendableSoil.ChunksData.ChunkData.remove(location);
                 ExpendableSoil.ChunksData.DiedChunks.add(location);
 
-                ChunkManager.changeBiome(Bukkit.getWorlds().get(0).getChunkAt(location), Biome.DESERT); // TODO: Complete change biome method
+                ChunkManager.changeBiome(chunk, Biome.DESERT);
                 return;
             }
 
             ExpendableSoil.ChunksData.ChunkData.put(location, healthPoints + 1);
         }
 
-        for (var location : ExpendableSoil.ChunksData.DiedChunks) {
-            ChunkManager.replaceChunkBlock(Bukkit.getWorlds().get(0).getChunkAt(location), Material.GRASS_BLOCK, Material.DIRT, .15);
-            ChunkManager.replaceChunkBlock(Bukkit.getWorlds().get(0).getChunkAt(location), Material.DIRT, Material.SAND, .15);
-        }
+        for (var location : ExpendableSoil.ChunksData.DiedChunks)
+            ChunkManager.replaceChunkBlock(Bukkit.getWorlds().get(0).getChunkAt(location), Material.GRASS_BLOCK, Material.COARSE_DIRT, 1);
     }
 }

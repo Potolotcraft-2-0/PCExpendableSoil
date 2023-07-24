@@ -14,19 +14,13 @@ public class ChunkManager {
      * @param biome New biome
      */
     public static void changeBiome(Chunk chunk, Biome biome) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                var world = chunk.getWorld();
-                int chunkX = chunk.getX() << 4;
-                int chunkZ = chunk.getZ() << 4;
+        int cX = chunk.getX() * 16;
+        int cZ = chunk.getZ() * 16;
+        var world = chunk.getWorld();
 
-                for (int x = 0; x < 16; x++)
-                    for (int z = 0; z < 16; z++)
-                        for (int y = 0; y < world.getMaxHeight(); y++)
-                            world.getBlockAt(chunkX + x, y, chunkZ + z).setBiome(biome);
-            }
-        }.runTask(ExpendableSoil.getPlugin(ExpendableSoil.class));
+        for(int x = 0; x < 16; x++)
+            for(int z = 0; z < 16; z++)
+                world.setBiome(cX + x, cZ+ z, biome);
     }
 
     /**
