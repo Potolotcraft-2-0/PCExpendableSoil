@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class Growable {
     public static List<Material> Growable = Arrays.asList(
             Material.WHEAT,
@@ -22,6 +23,6 @@ public class Growable {
             Material.KELP,
             Material.GLOW_BERRIES,
             Material.CAVE_VINES,
-            Material.CHORUS_FRUIT
+            Material.CHORUS_FRUIT // TODO: Complete list
     );
 }

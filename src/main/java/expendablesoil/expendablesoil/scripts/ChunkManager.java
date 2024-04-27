@@ -4,8 +4,11 @@ import expendablesoil.expendablesoil.ExpendableSoil;
 
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+
 
 public class ChunkManager {
     /**
@@ -20,7 +23,53 @@ public class ChunkManager {
 
         for(int x = 0; x < 16; x++)
             for(int z = 0; z < 16; z++)
-                world.setBiome(cX + x, cZ+ z, biome);
+                world.setBiome(cX + x, cZ+ z, biome); // TODO: Deprecated?
+    }
+
+    /**
+     * Get chunk biome
+     * @param chunk Chunk
+     * @return Biome
+     */
+    public static Biome getBiome(Chunk chunk) {
+        int cX = chunk.getX() * 16;
+        int cZ = chunk.getZ() * 16;
+        var world = chunk.getWorld();
+
+        return world.getBiome(cX, 50, cZ);
+    }
+
+    /**
+     * Changes chunk healths
+     * @param chunk Chunk
+     * @param healths Healths
+     */
+    public static void changeChunkHealths(Chunk chunk, int healths) {
+        var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
+        var healthPoints = chunk.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+
+        if (healthPoints == null) return;
+        chunk.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, healthPoints + healths);
+    }
+
+    /**
+     * Get chunk health
+     * @param chunk Chunk
+     * @return Healths
+     */
+    public static int getChunkHealths(Chunk chunk) {
+        var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
+        return chunk.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+    }
+
+    /**
+     * Set healths of chunk
+     * @param chunk Chunk
+     * @param healths Healths
+     */
+    public static void setChunkHealths(Chunk chunk, int healths) {
+        var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
+        chunk.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, healths);
     }
 
     /**

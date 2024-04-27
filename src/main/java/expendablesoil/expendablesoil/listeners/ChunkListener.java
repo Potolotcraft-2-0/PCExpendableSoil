@@ -1,10 +1,11 @@
 package expendablesoil.expendablesoil.listeners;
 
-import expendablesoil.expendablesoil.ExpendableSoil;
 import expendablesoil.expendablesoil.data.ChunksData;
-
 import expendablesoil.expendablesoil.data.Friendly;
 import expendablesoil.expendablesoil.data.Growable;
+
+import expendablesoil.expendablesoil.scripts.ChunkManager;
+import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -14,46 +15,42 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 
+
+@ExtensionMethod({ChunkManager.class})
 public class ChunkListener implements Listener {
 
     @EventHandler
     public void onChunkInteraction(BlockPlaceEvent event) {
         var block = event.getBlock();
-        var chunkKey = block.getChunk().getChunkKey();
+        var chunk = block.getChunk();
 
         if (!Growable.Growable.contains(block.getType())) return;
-        if (ExpendableSoil.ChunksData.ChunkData.get(chunkKey) != null) return;
 
-        if (ExpendableSoil.ChunksData.DiedChunks.contains(chunkKey)) {
+        if (chunk.getChunkHealths() <= 0) {
             event.getBlock().setType(Material.DEAD_BUSH);
             return;
         }
 
         var defaultHealthPoints = 100;
-        ExpendableSoil.ChunksData.ChunkData.put(chunkKey, ChunksData.BiomeHealthPoints.get(block.getBiome()) == null ?
-                defaultHealthPoints : ChunksData.BiomeHealthPoints.get(block.getBiome()));
+        chunk.setChunkHealths(ChunksData.BiomeHealthPoints.get(block.getBiome()) == null ? defaultHealthPoints : ChunksData.BiomeHealthPoints.get(block.getBiome()));
     }
 
     @EventHandler
     public void onGrown(BlockGrowEvent event) {
-        var chunk = event.getBlock().getChunk().getChunkKey();
-        if (ExpendableSoil.ChunksData.ChunkData.get(chunk) == null) return;
-
-        ExpendableSoil.ChunksData.ChunkData.put(chunk, ExpendableSoil.ChunksData.ChunkData.get(chunk) - 1);
+        var chunk = event.getBlock().getChunk();
+        chunk.changeChunkHealths(-1);
     }
 
     @EventHandler
     public void onTreeGrown(StructureGrowEvent event) {
-        var chunk = event.getBlocks().get(0).getChunk().getChunkKey();
-        if (ExpendableSoil.ChunksData.ChunkData.get(chunk) == null) return;
-
-        ExpendableSoil.ChunksData.ChunkData.put(chunk, ExpendableSoil.ChunksData.ChunkData.get(chunk) - 10);
+        var chunk = event.getLocation().getChunk();
+        chunk.changeChunkHealths(-10);
     }
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
-        var chunk = event.getEntity().getChunk().getChunkKey();
-        if (!ExpendableSoil.ChunksData.DiedChunks.contains(chunk)) return;
+        var chunk = event.getEntity().getChunk();
+        if (chunk.getChunkHealths() <= 0) return;
 
         if (Friendly.Friendly.contains(event.getEntity().getType())) event.setCancelled(true);
     }
