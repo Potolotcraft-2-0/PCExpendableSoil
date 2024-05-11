@@ -17,13 +17,15 @@ public class ChunkManager {
      * @param biome New biome
      */
     public static void changeBiome(Chunk chunk, Biome biome) {
-        int cX = chunk.getX() * 16;
-        int cZ = chunk.getZ() * 16;
-        var world = chunk.getWorld();
-
-        for(int x = 0; x < 16; x++)
-            for(int z = 0; z < 16; z++)
-                world.setBiome(cX + x, cZ+ z, biome); // TODO: Deprecated?
+        var oldBiome = getBiome(chunk);
+        for(int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                if (chunk.getBlock(x, 0, z).getBiome() == oldBiome) {
+                    var block = chunk.getBlock(x, 0, z);
+                    block.setBiome(biome);
+                }
+            }
+        }
     }
 
     /**
@@ -35,7 +37,6 @@ public class ChunkManager {
         int cX = chunk.getX() * 16;
         int cZ = chunk.getZ() * 16;
         var world = chunk.getWorld();
-
         return world.getBiome(cX, 50, cZ);
     }
 
@@ -47,8 +48,8 @@ public class ChunkManager {
     public static void changeChunkHealths(Chunk chunk, int healths) {
         var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
         var healthPoints = chunk.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
-
         if (healthPoints == null) return;
+
         chunk.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, healthPoints + healths);
     }
 
@@ -59,7 +60,10 @@ public class ChunkManager {
      */
     public static int getChunkHealths(Chunk chunk) {
         var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
-        return chunk.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+        var container = chunk.getPersistentDataContainer();
+
+        if (container.has(key)) return container.get(key, PersistentDataType.INTEGER);
+        else return -1;
     }
 
     /**
@@ -98,4 +102,3 @@ public class ChunkManager {
         }.runTask(ExpendableSoil.getPlugin(ExpendableSoil.class));
     }
 }
-
