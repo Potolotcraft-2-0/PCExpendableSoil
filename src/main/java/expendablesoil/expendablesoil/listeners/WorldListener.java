@@ -20,15 +20,14 @@ public class WorldListener implements Listener {
             var chunks = world.getLoadedChunks();
             for (var chunk : chunks) {
                 var healthPoints = chunk.getChunkHealths();
-                if (healthPoints == -1) return;
+                if (healthPoints == ChunkManager.NotFound) return;
 
-                if (healthPoints <= 0) {
+                if (chunk.isDead()) {
                     if (chunk.getBiome() != Biome.DESERT) chunk.changeBiome(Biome.DESERT);
                     chunk.replaceChunkBlock(Material.GRASS_BLOCK, Material.COARSE_DIRT, 1);
                     return;
                 }
-
-                chunk.changeChunkHealths(1);
+                else chunk.changeChunkHealths(1);
             }
         }
     }

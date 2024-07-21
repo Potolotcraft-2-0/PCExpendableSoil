@@ -6,16 +6,24 @@ import expendablesoil.expendablesoil.listeners.PlayerListener;
 import expendablesoil.expendablesoil.listeners.WorldListener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
 
 public final class ExpendableSoil extends JavaPlugin {
+    public static FileConfiguration Config;
+
     @Override
     public void onEnable() {
         System.out.print("[ExpendableSoil] ExpendableSoil starting...");
+
+        var file = new File(getDataFolder() + File.separator + "config.yml");
+        if (!file.exists()) this.saveDefaultConfig();
+        Config = ExpendableSoil.getPlugin(ExpendableSoil.class).getConfig();
 
         for (var listener : Arrays.asList(new ChunkListener(), new WorldListener(), new PlayerListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);

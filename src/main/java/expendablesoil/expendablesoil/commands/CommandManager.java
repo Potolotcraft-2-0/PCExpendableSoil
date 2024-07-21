@@ -18,10 +18,10 @@ public class CommandManager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
         switch (command.getName()) {
             case "expendable_info" -> sender.sendMessage("HP: " + Bukkit.getServer()
-                        .getWorlds().get(0).getChunkAt(((Player) sender).getLocation()).getChunkHealths());
+                        .getWorlds().getFirst().getChunkAt(((Player) sender).getLocation()).getChunkHealths());
             case "kill_chunk" -> {
-                var chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(((Player) sender).getLocation());
-                chunk.setChunkHealths(-1);
+                var chunk = Bukkit.getServer().getWorlds().getFirst().getChunkAt(((Player) sender).getLocation());
+                chunk.setChunkHealths(ChunkManager.Dead);
             }
         }
         return true;

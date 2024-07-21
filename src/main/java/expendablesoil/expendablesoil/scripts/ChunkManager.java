@@ -11,6 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 
 public class ChunkManager {
+    public static int NotFound = -999;
+    public static int Dead = -1;
+
     /**
      * Switch biome of chunk
      * @param chunk Chunk where should be changed biome
@@ -34,8 +37,8 @@ public class ChunkManager {
      * @return Biome
      */
     public static Biome getBiome(Chunk chunk) {
-        int cX = chunk.getX() * 16;
-        int cZ = chunk.getZ() * 16;
+        var cX = chunk.getX() * 16;
+        var cZ = chunk.getZ() * 16;
         var world = chunk.getWorld();
         return world.getBiome(cX, 50, cZ);
     }
@@ -61,9 +64,11 @@ public class ChunkManager {
     public static int getChunkHealths(Chunk chunk) {
         var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
         var container = chunk.getPersistentDataContainer();
+        var healths = container.get(key, PersistentDataType.INTEGER);
+        if (healths == null) return NotFound;
 
-        if (container.has(key)) return container.get(key, PersistentDataType.INTEGER);
-        else return -1;
+        if (container.has(key)) return healths;
+        else return NotFound;
     }
 
     /**
@@ -74,6 +79,15 @@ public class ChunkManager {
     public static void setChunkHealths(Chunk chunk, int healths) {
         var key = new NamespacedKey(ExpendableSoil.getPlugin(ExpendableSoil.class), "chunk-healths");
         chunk.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, healths);
+    }
+
+    /**
+     * Is chunk already dead
+     * @param chunk Chunk for check
+     * @return Dead status
+     */
+    public static boolean isDead(Chunk chunk) {
+        return getChunkHealths(chunk) <= Dead;
     }
 
     /**
