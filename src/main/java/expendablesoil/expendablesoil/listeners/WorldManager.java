@@ -27,6 +27,7 @@ public class WorldManager {
                         if (chunk.isDead()) {
                             chunk.replaceChunkBlock(Material.GRASS_BLOCK, Material.COARSE_DIRT, .05);
                             chunk.replaceChunkBlock(Material.DIRT, Material.COARSE_DIRT, .05);
+                            chunk.replaceChunkBlock(Material.COARSE_DIRT, Material.SAND, .05);
                         }
                         else {
                             var defaultHp = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
