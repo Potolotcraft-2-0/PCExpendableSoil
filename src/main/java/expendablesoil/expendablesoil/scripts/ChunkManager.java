@@ -15,23 +15,6 @@ public class ChunkManager {
     public static int Dead = -1;
 
     /**
-     * Switch biome of chunk
-     * @param chunk Chunk where should be changed biome
-     * @param biome New biome
-     */
-    public static void changeBiome(Chunk chunk, Biome biome) {
-        var oldBiome = getBiome(chunk);
-        for(int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                if (chunk.getBlock(x, 0, z).getBiome() == oldBiome) {
-                    var block = chunk.getBlock(x, 0, z);
-                    block.setBiome(biome);
-                }
-            }
-        }
-    }
-
-    /**
      * Get chunk biome
      * @param chunk Chunk
      * @return Biome

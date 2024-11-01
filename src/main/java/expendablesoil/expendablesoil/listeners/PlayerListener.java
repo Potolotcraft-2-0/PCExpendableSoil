@@ -1,5 +1,6 @@
 package expendablesoil.expendablesoil.listeners;
 
+import expendablesoil.expendablesoil.ExpendableSoil;
 import expendablesoil.expendablesoil.scripts.ChunkManager;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
@@ -18,6 +19,11 @@ public class PlayerListener implements Listener {
         var chunk = block.getChunk();
         var handItem = event.getItem();
         if (handItem == null) return;
+
+        if (chunk.getChunkHealths() == ChunkManager.NotFound) {
+            var defaultHealthPoints = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
+            chunk.setChunkHealths(defaultHealthPoints);
+        }
 
         if (handItem.getType().equals(Material.BONE_MEAL))
             chunk.changeChunkHealths(-10);
