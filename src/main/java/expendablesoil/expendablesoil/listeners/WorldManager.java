@@ -25,6 +25,8 @@ public class WorldManager {
                         if (healthPoints == ChunkManager.NotFound) continue;
 
                         if (chunk.isDead()) {
+                            chunk.replaceChunkBlock(Material.FARMLAND, Material.GRASS_BLOCK, .05);
+                            chunk.replaceChunkBlock(Material.PODZOL, Material.GRASS_BLOCK, .05);
                             chunk.replaceChunkBlock(Material.GRASS_BLOCK, Material.COARSE_DIRT, .05);
                             chunk.replaceChunkBlock(Material.DIRT, Material.COARSE_DIRT, .05);
                             chunk.replaceChunkBlock(Material.COARSE_DIRT, Material.SAND, .05);
@@ -32,7 +34,7 @@ public class WorldManager {
                         else {
                             var defaultHp = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
                             if (chunk.getChunkHealths() + 5 > defaultHp) continue;
-                            chunk.changeChunkHealths(10);
+                            chunk.changeChunkHealths(ExpendableSoil.Config.getInt("setup.regeneration", 10));
                         }
                     }
                 }

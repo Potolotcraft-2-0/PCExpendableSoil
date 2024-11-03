@@ -52,3 +52,8 @@ healths:
   WINDSWEPT_HILLS: 280
   WINDSWEPT_SAVANNA: 200
   WOODED_BADLANDS: 125
+setup:
+  regeneration: 10
+  grow_damage: 5
+  tree_damage: 10
+  creature_damage: 5
