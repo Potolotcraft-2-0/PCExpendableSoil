@@ -3,10 +3,15 @@ version: '${project.version}'
 main: expendablesoil.expendablesoil.ExpendableSoil
 api-version: 1.20
 authors: [ j1sk1ss ]
-description: Expendable soil simulation
+description: "Expendable soil simulation made by j1sk1ss"
 
 commands:
   expendable_info:
-    usage: /expendable_info
+    usage: "/expendable_info"
+    description: "Get chunk HP"
   kill_chunk:
-    usage: /kill_chunk
+    usage: "/kill_chunk"
+    description: "Kill whole chunk"
+  chunk_standup_man:
+    usage: "/chunk_standup_man <hp>"
+    description: "Restore chunk HP and blocks"

@@ -32,7 +32,7 @@ public class WorldManager {
                         else {
                             var defaultHp = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
                             if (chunk.getChunkHealths() + 5 > defaultHp) continue;
-                            chunk.changeChunkHealths(5);
+                            chunk.changeChunkHealths(10);
                         }
                     }
                 }

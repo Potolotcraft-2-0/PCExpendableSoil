@@ -33,7 +33,7 @@ public final class ExpendableSoil extends JavaPlugin {
 
         System.out.print("[ExpendableSoil] Events registered...");
 
-        for (var command : Arrays.asList("expendable_info", "kill_chunk"))
+        for (var command : Arrays.asList("expendable_info", "kill_chunk", "chunk_standup_man"))
             Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         System.out.print("[ExpendableSoil] Activated");
