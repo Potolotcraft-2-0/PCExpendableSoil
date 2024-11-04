@@ -21,7 +21,7 @@ public class PlayerListener implements Listener {
         if (handItem == null) return;
 
         if (chunk.getChunkHealths() == ChunkManager.NotFound) {
-            var defaultHealthPoints = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
+            var defaultHealthPoints = ExpendableSoil.getInstance().Config.getInt("healths." + chunk.getBiome().toString(), 100);
             chunk.setChunkHealths(defaultHealthPoints);
         }
 

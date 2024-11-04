@@ -16,7 +16,7 @@ import java.util.Objects;
 
 
 public final class ExpendableSoil extends JavaPlugin {
-    public static FileConfiguration Config;
+    public FileConfiguration Config;
 
     @Override
     public void onEnable() {
@@ -37,6 +37,10 @@ public final class ExpendableSoil extends JavaPlugin {
             Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         System.out.print("[ExpendableSoil] Activated");
+    }
+
+    public static ExpendableSoil getInstance() {
+        return getPlugin(ExpendableSoil.class);
     }
 
     @Override

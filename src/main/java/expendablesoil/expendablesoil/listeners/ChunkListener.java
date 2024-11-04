@@ -23,7 +23,7 @@ public class ChunkListener implements Listener {
         var block = event.getBlock();
         var chunk = block.getChunk();
         if (chunk.getChunkHealths() == ChunkManager.NotFound) {
-            var defaultHealthPoints = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
+            var defaultHealthPoints = ExpendableSoil.getInstance().Config.getInt("healths." + chunk.getBiome().toString(), 100);
             chunk.setChunkHealths(defaultHealthPoints);
             return;
         }
@@ -36,7 +36,7 @@ public class ChunkListener implements Listener {
     public void onGrown(BlockGrowEvent event) {
         var chunk = event.getBlock().getChunk();
         if (chunk.getChunkHealths() != ChunkManager.NotFound) {
-            if (!damageChunk(chunk, ExpendableSoil.Config.getInt("setup.grow_damage", 1))) event.setCancelled(true);
+            if (!damageChunk(chunk, ExpendableSoil.getInstance().Config.getInt("setup.grow_damage", 1))) event.setCancelled(true);
         }
     }
 
@@ -44,17 +44,15 @@ public class ChunkListener implements Listener {
     public void onTreeGrown(StructureGrowEvent event) {
         var chunk = event.getLocation().getChunk();
         if (chunk.getChunkHealths() != ChunkManager.NotFound) {
-            if (!damageChunk(chunk, ExpendableSoil.Config.getInt("setup.tree_damage", 10))) event.setCancelled(true);
+            if (!damageChunk(chunk, ExpendableSoil.getInstance().Config.getInt("setup.tree_damage", 10))) event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
         var chunk = event.getEntity().getChunk();
-        if (chunk.getChunkHealths() == ChunkManager.NotFound) return;
-
-        if (!(event.getEntity() instanceof Monster)) {
-            if (!damageChunk(chunk, ExpendableSoil.Config.getInt("setup.creature_damage", 5))) event.setCancelled(true);
+        if (!(event.getEntity() instanceof Monster) && chunk.getChunkHealths() != ChunkManager.NotFound) {
+            if (!damageChunk(chunk, ExpendableSoil.getInstance().Config.getInt("setup.creature_damage", 5))) event.setCancelled(true);
         }
     }
 

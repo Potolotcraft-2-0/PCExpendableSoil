@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 
 @ExtensionMethod({ChunkManager.class})
@@ -20,25 +20,26 @@ public class WorldManager {
             public void run() {
                 for (var world : Bukkit.getWorlds()) {
                     var chunks = world.getLoadedChunks();
-                    for (var chunk : chunks) {
+                    Arrays.stream(chunks).toList().parallelStream().forEach(chunk -> {
                         var healthPoints = chunk.getChunkHealths();
-                        if (healthPoints == ChunkManager.NotFound) continue;
+                        if (healthPoints != ChunkManager.NotFound) {
 
-                        if (chunk.isDead()) {
-                            chunk.replaceChunkBlock(Material.FARMLAND, Material.GRASS_BLOCK, .05);
-                            chunk.replaceChunkBlock(Material.PODZOL, Material.GRASS_BLOCK, .05);
-                            chunk.replaceChunkBlock(Material.GRASS_BLOCK, Material.COARSE_DIRT, .05);
-                            chunk.replaceChunkBlock(Material.DIRT, Material.COARSE_DIRT, .05);
-                            chunk.replaceChunkBlock(Material.COARSE_DIRT, Material.SAND, .05);
+                            if (chunk.isDead()) {
+                                chunk.replaceChunkBlock(Material.FARMLAND, Material.GRASS_BLOCK, .05);
+                                chunk.replaceChunkBlock(Material.PODZOL, Material.GRASS_BLOCK, .05);
+                                chunk.replaceChunkBlock(Material.GRASS_BLOCK, Material.COARSE_DIRT, .05);
+                                chunk.replaceChunkBlock(Material.DIRT, Material.COARSE_DIRT, .05);
+                                chunk.replaceChunkBlock(Material.COARSE_DIRT, Material.SAND, .05);
+                            } else {
+                                var defaultHp = ExpendableSoil.getInstance().Config.getInt("healths." + chunk.getBiome().toString(), 100);
+                                if (chunk.getChunkHealths() + 5 <= defaultHp) {
+                                    chunk.changeChunkHealths(ExpendableSoil.getInstance().Config.getInt("setup.regeneration", 10));
+                                }
+                            }
                         }
-                        else {
-                            var defaultHp = ExpendableSoil.Config.getInt("healths." + chunk.getBiome().toString(), 100);
-                            if (chunk.getChunkHealths() + 5 > defaultHp) continue;
-                            chunk.changeChunkHealths(ExpendableSoil.Config.getInt("setup.regeneration", 10));
-                        }
-                    }
+                    });
                 }
             }
-        }.runTaskTimer(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("ExpendableSoil")), 0, 1000);
+        }.runTaskTimer(ExpendableSoil.getInstance(), 0, 1000);
     }
 }
